@@ -135,4 +135,4 @@ bool BaseballDataModel::isGameFinal() {
 
 bool BaseballDataModel::isGameScheduled() {
     return m_gameStatus == "Scheduled" || m_gameStatus == "Pre-Game";
-} 
+}

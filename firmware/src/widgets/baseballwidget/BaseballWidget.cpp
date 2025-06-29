@@ -29,7 +29,7 @@ void BaseballWidget::setup() {
         Serial.println("No baseball teams configured");
         return;
     }
-    
+
     Serial.println("Baseball widget setup complete with " + String(m_favoriteTeamCount) + " teams");
 }
 
@@ -63,7 +63,7 @@ void BaseballWidget::update(bool force) {
         setBusy(false);
         m_baseballDelayPrev = millis();
     }
-    
+
     // Rotate through games if we have multiple
     if (m_gameCount > 1 && (m_rotationDelayPrev == 0 || (millis() - m_rotationDelayPrev) >= m_rotationDelay)) {
         m_currentGameIndex = (m_currentGameIndex + 1) % m_gameCount;
@@ -89,12 +89,12 @@ void BaseballWidget::buttonPressed(uint8_t buttonId, ButtonState state) {
 void BaseballWidget::fetchGamesForTeams() {
     // Get today's date in YYYY-MM-DD format
     time_t now = time(nullptr);
-    struct tm* timeinfo = localtime(&now);
+    struct tm *timeinfo = localtime(&now);
     char dateStr[11];
     strftime(dateStr, sizeof(dateStr), "%Y-%m-%d", timeinfo);
-    
+
     String url = "https://statsapi.mlb.com/api/v1/schedule?date=" + String(dateStr) + "&sportId=1";
-    
+
     HTTPClient http;
     http.begin(url);
     int httpCode = http.GET();
@@ -106,27 +106,28 @@ void BaseballWidget::fetchGamesForTeams() {
 
         if (!error) {
             m_gameCount = 0;
-            
+
             if (doc.containsKey("dates") && doc["dates"].size() > 0) {
                 JsonArray games = doc["dates"][0]["games"];
-                
+
                 for (JsonObject game : games) {
-                    if (m_gameCount >= MAX_BASEBALL_GAMES) break;
-                    
+                    if (m_gameCount >= MAX_BASEBALL_GAMES)
+                        break;
+
                     String awayTeam = game["teams"]["away"]["team"]["name"].as<String>();
                     String homeTeam = game["teams"]["home"]["team"]["name"].as<String>();
-                    
+
                     // Check if either team is in our favorites
                     if (isTeamInFavorites(awayTeam) || isTeamInFavorites(homeTeam)) {
                         BaseballDataModel &gameModel = m_games[m_gameCount];
-                        
+
                         gameModel.setAwayTeam(awayTeam);
                         gameModel.setHomeTeam(homeTeam);
                         gameModel.setAwayScore(game["teams"]["away"]["score"].as<int>());
                         gameModel.setHomeScore(game["teams"]["home"]["score"].as<int>());
                         gameModel.setGameStatus(game["status"]["detailedState"].as<String>());
                         gameModel.setGameId(game["gamePk"].as<String>());
-                        
+
                         // Handle inning information for live games
                         if (gameModel.isGameLive()) {
                             JsonObject linescore = game["linescore"];
@@ -137,20 +138,20 @@ void BaseballWidget::fetchGamesForTeams() {
                                 gameModel.setInningState(inningState);
                             }
                         }
-                        
+
                         // Handle game time for scheduled games
                         if (gameModel.isGameScheduled()) {
                             String gameTime = game["gameDate"].as<String>();
                             // Convert UTC to local time (simplified)
                             gameModel.setGameTime(gameTime.substring(11, 16)); // Extract HH:MM
                         }
-                        
+
                         gameModel.setChangedStatus(true);
                         m_gameCount++;
                     }
                 }
             }
-            
+
             Serial.println("Found " + String(m_gameCount) + " games for favorite teams");
         } else {
             Serial.println("deserializeJson() failed for baseball data");
@@ -201,7 +202,7 @@ void BaseballWidget::displayGame(int8_t displayIndex, BaseballDataModel &game, u
     // Bottom info area
     m_manager.fillRect(0, 170, 240, 70, TFT_BLACK);
     m_manager.setFontColor(TFT_WHITE, TFT_BLACK);
-    
+
     // Show different info based on game status
     if (game.isGameLive()) {
         m_manager.drawCentreString("LIVE", centre, 185, smallFontSize);
@@ -217,4 +218,4 @@ void BaseballWidget::displayGame(int8_t displayIndex, BaseballDataModel &game, u
 
 String BaseballWidget::getName() {
     return "Baseball";
-} 
+}

@@ -51,4 +51,4 @@
 // - San Diego Padres
 // - San Francisco Giants
 // - St. Louis Cardinals
-// - Washington Nationals 
+// - Washington Nationals

@@ -35,9 +35,9 @@ private:
     BaseballDataModel m_games[MAX_BASEBALL_GAMES];
     int8_t m_gameCount;
     int8_t m_currentGameIndex;
-    
+
     String m_favoriteTeams[10]; // Array to store favorite team names
     int8_t m_favoriteTeamCount;
 };
 
-#endif // BASEBALL_WIDGET_H 
+#endif // BASEBALL_WIDGET_H

@@ -6,19 +6,19 @@
 class BaseballDataModel {
 public:
     BaseballDataModel();
-    
+
     // Team information
     BaseballDataModel &setHomeTeam(String homeTeam);
     String getHomeTeam();
     BaseballDataModel &setAwayTeam(String awayTeam);
     String getAwayTeam();
-    
+
     // Scores
     BaseballDataModel &setHomeScore(int homeScore);
     int getHomeScore();
     BaseballDataModel &setAwayScore(int awayScore);
     int getAwayScore();
-    
+
     // Game status
     BaseballDataModel &setGameStatus(String status);
     String getGameStatus();
@@ -26,21 +26,21 @@ public:
     String getInning();
     BaseballDataModel &setInningState(String inningState);
     String getInningState();
-    
+
     // Game time
     BaseballDataModel &setGameTime(String gameTime);
     String getGameTime();
     BaseballDataModel &setGameDate(String gameDate);
     String getGameDate();
-    
+
     // Game ID for tracking
     BaseballDataModel &setGameId(String gameId);
     String getGameId();
-    
+
     // Change tracking
     bool isChanged();
     BaseballDataModel &setChangedStatus(bool changed);
-    
+
     // Utility methods
     String getScoreDisplay();
     String getGameStatusDisplay();
@@ -62,4 +62,4 @@ private:
     bool m_changed = false;
 };
 
-#endif // BASEBALL_DATA_MODEL_H 
+#endif // BASEBALL_DATA_MODEL_H
