@@ -20,6 +20,9 @@
 #ifdef MQTT_WIDGET_HOST
     #include "mqttwidget/MQTTWidget.h"
 #endif
+#ifdef BASEBALL_TEAM_LIST
+    #include "baseballwidget/BaseballWidget.h"
+#endif
 
 TFT_eSPI tft = TFT_eSPI();
 
@@ -129,6 +132,9 @@ void setup() {
     widgetSet->add(new StockWidget(*sm));
 #endif
     widgetSet->add(new WeatherWidget(*sm));
+#ifdef BASEBALL_TEAM_LIST
+    widgetSet->add(new BaseballWidget(*sm));
+#endif
 #ifdef WEB_DATA_WIDGET_URL
     widgetSet->add(new WebDataWidget(*sm, WEB_DATA_WIDGET_URL));
 #endif
